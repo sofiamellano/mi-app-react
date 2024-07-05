@@ -1,22 +1,21 @@
-import MyButton from "./MyButton";
+import Container from './components/Container';
+import Titulo from './components/Titulo';
+import Formulario from './components/Formulario';
 
 function App() {
 
-  const onClickHundler = () => {
-    alert('Click!'); 
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+    console.log(event);
   }
 
-  const name = "Acept"
-  const title = "My Button"
-  const parrafo = "Tarea de clase"
-
   return (
-    <MyButton
-    name={name}
-    title={title}
-    parrafo={parrafo}
-    onClick={onClickHundler}
-    />
-  );
+    <>
+    <Container>
+      <Titulo value="ToDo - App" />
+      <Formulario onSubmitHandler={onSubmitHandler}/>
+    </Container>
+    </>
+  ); 
 }
 export default App;
