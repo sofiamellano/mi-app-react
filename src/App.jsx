@@ -1,5 +1,6 @@
 import Container from './components/Container';
-import Titulo from './components/Titulo';
+import Titulo from './components/Titulo'; 
+<components></components>
 import Formulario from './components/Formulario';
 
 function App() {
