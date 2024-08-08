@@ -12,6 +12,8 @@ function App() {
   const onSubmitHandler = (event) => {
     event.preventDefault();
     if(!event.target.elements.taskName.value) return;
+
+    //reemplazar el string del value por un objeto que contenga el string y el estado finalizado.
     setTasks([...tasks, event.target.elements.taskName.value]);
   }
 
