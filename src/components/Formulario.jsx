@@ -1,11 +1,23 @@
+import React, { useRef } from 'react';
+
+
+
 function Formulario ({onSubmitHandler}) {
+    const taskInput = useRef();
+
+    const onSubmitHandlerEvent = (event) => {
+        onSubmitHandler(event);
+        taskInput.current.value = '';
+    }
 
     return(
-        <form onSubmit={onSubmitHandler} className="form">
-            <input name="taskName" text='text' placeholder="Escribe tu tarea"/>
+        <Formulario onSubmit={onSubmitHandlerEvent} className="form">
+            <input ref={taskInput} name="taskName" text='text' placeholder="Escribe tu tarea"/>
             <button>Crear</button>
-        </form>
+        </Formulario>
     );
 }
-export default Formulario;
 
+
+
+export default Formulario;

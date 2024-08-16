@@ -2,37 +2,60 @@ import React, { useState, useEffect } from 'react';
 import Container from './components/Container';
 import Titulo from './components/Titulo'; 
 import Formulario from './components/Formulario';
+import Task from './components/Task';
 
 function App() {
-
-  console.log('Componente App ejecutado');
-
-  const [tasks, setTasks] = useState(() => { const savedTasks = localStorage.getItem('tasks');
-    return savedTasks ? JSON.parse(savedTasks) : []; }); //estado arranque con el valor que esta en localstorage
-
+  // Se inicializa el estado de las tareas desde el Local Storage.
+  // Si no existe se inicializa como un arreglo (array) vacío.
+  const [tasks, setTasks] = useState(JSON.parse(localStorage.getItem('tasks')) || []);
+  
   const onSubmitHandler = (event) => {
+    // Prevenimos el comportamiento por defecto
     event.preventDefault();
-    //if(!event.target.elements.taskName.value) return;
-    const taskName = event.target.elements.taskName.value;
-    if (!taskName) return;
-    const newTask = { name: taskName, completed: false };
-    //reemplazar el string del value por un objeto que contenga el string y el estado finalizado.
-    setTasks([...tasks, newTask]);
+    // Si no escribió nada el usuairo, retornamos y no seguimos ejecutando.
+    if(!event.target.elements.taskName.value) return;
+
+    // Creamos un nuevo objeto con la tarea
+    const newTask = {
+      id: Math.floor(Math.random() * 1000000000000),
+      name: event.target.elements.taskName.value,
+      completed: false
+    }
+    
+    // Agregamos la nueva tarea al estado
+    setTasks([ ...tasks, newTask ]);
+  }
+  
+  useEffect( () => {
+    // Guardamos las tareas en el Local Storage
+    localStorage.setItem('tasks', JSON.stringify([ ...tasks ]));
+  }, [tasks] ); // Se ejecuta cada vez que el estado de las tareas cambia.
+  
+  const toggleCompleted = (id) => {
+    // Modificamos el estado de la tarea
+    const modifiedTask = tasks.map(task => {
+      if(task.id === id) {
+        task.completed = !task.completed;
+      }
+      return task;
+    });
+    // Actualizamos el estado
+    setTasks([ ...modifiedTask ]);
   }
 
-  useEffect( () => {
-    console.log('useEffect ejecutado', [tasks]);
-    localStorage.setItem('tasks',JSON.stringify(tasks));
-  }, [tasks] ); //array = dependencias // dentro del useeffect no puede ir una dependencia del mismo
-//Tarea: Agregar el guardado en el localStorage, actualizar tasks en localstorage
+  // Renderizamos el componente
   return (
     <>
-    <Container>
-      <Titulo value="ToDo - App" />
-      <Formulario onSubmitHandler={onSubmitHandler}/>
-      {JSON.stringify(tasks)};
-    </Container>
+      <Container>
+        <Titulo valor="ToDo - App" />
+        <Formulario onSubmitHandler={onSubmitHandler} />
+        <ul className='task-list'>
+          {
+            tasks.map((taskItem) => <Task key={taskItem.id} {...taskItem} onToggleHandler={toggleCompleted} />)
+          }
+        </ul>
+      </Container>
     </>
-  ); 
+  );
 }
 export default App;
